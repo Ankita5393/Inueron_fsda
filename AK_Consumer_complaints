@@ -92,6 +92,12 @@ select *,
     from AK_CONSUMER_COMPLAINTS;
     
     
+    
+    
+    CREATE OR REPLACE VIEW  AK_COMPANY_RESPONSE_TO_CONSUMER AS
+
+    
+    
     ----- OPTIMIZED CODE
     SELECT *,
                CASE 
