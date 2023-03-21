@@ -1,0 +1,109 @@
+use database DEMO_01;
+Create or replace table AK_Consumer_Complaints
+(
+    DATE_RECEIVED STRING,
+     PRODUCT_NAME VARCHAR2(50),
+     SUB_PRODUCT VARCHAR2(100),
+     ISSUE VARCHAR2(100),
+     SUB_ISSUE VARCHAR2(100),
+     CONSUMER_COMPLAINT_NARRATIVE string,
+     Company_Public_Response STRING,
+     Company VARCHAR(100),
+     State_Name CHAR(4),
+     Zip_Code string,
+     Tags VARCHAR(40),
+     Consumer_Consent_Provided CHAR(35),
+     Submitted_via STRING,
+     Date_Sent_to_Company STRING,
+     Company_Response_to_Consumer VARCHAR(40),
+     Timely_Response CHAR(4),
+     CONSUMER_DISPUTED CHAR(4),
+     COMPLAINT_ID NUMBER(12,0) NOT NULL PRIMARY KEY
+);
+Describe table AK_Consumer_Complaints;
+select *from  AK_Consumer_Complaints;
+
+
+Select Distinct* from AK_Consumer_Complaints;
+Select Distinct PRODUCT_NAME from AK_Consumer_Complaints;
+
+Select Distinct ISSUE from AK_Consumer_Complaints;
+
+Select Distinct *from AK_Consumer_Complaints where PRODUCT_NAME like 'Bank%'; 
+
+Select Distinct *from AK_Consumer_Complaints where PRODUCT_NAME like '%account';
+
+SELECT DISTINCT * FROM AK_CONSUMER_COMPLAINTS WHERE PRODUCT_NAME LIKE '%loan';
+
+SELECT DISTINCT * FROM AK_CONSUMER_COMPLAINTS WHERE PRODUCT_NAME LIKE '%Credit%';
+SELECT DISTINCT SUBMITTED_VIA  from AK_CONSUMER_COMPLAINTS;
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+create or replace table like_ex(subject varchar(20));
+insert into like_ex values
+    ('John  Dddoe'),
+    ('Joe   Doe'),
+    ('John_down'),
+    ('Joe down'),
+    ('Elaine'),
+    (''),    -- empty string
+    (null);
+
+SELECT * FROM like_ex;
+select subject from like_ex where subject like '%Jo%oe%' ;
+--order by subject;
+
+-------------------------------------------------------------IN keyword------------------------------------------
+
+SELECT DISTINCT * FROM AK_CONSUMER_COMPLAINTS;
+
+SELECT DISTINCT * FROM AK_CONSUMER_COMPLAINTS WHERE PRODUCT_NAME IN ('Consumer Loan','Mortgage','Debt collection');
+
+
+
+------------------------------case statments-------------------------------------------------------------------
+
+SELECT DISTINCT SUBMITTED_VIA  from AK_CONSUMER_COMPLAINTS;
+--then am filtering rows based on the conditions 
+SELECT DATE_RECEIVED, PRODUCT_NAME ,SUB_PRODUCT,ISSUE,
+        CASE WHEN SUBMITTED_VIA IN ('Referral','Postal Mail','Email') THEN 'Outbound'
+             WHEN SUBMITTED_VIA IN ('Phone','Web') THEN 'Inbound'
+             ELSE 'Electronics'
+         END AS Submission_Type,
+         
+         COMPANY,STATE_NAME,ZIP_CODE
+         
+FROM AK_CONSUMER_COMPLAINTS;
+
+SELECT DISTINCT COMPANY_RESPONSE_TO_CONSUMER FROM AK_CONSUMER_COMPLAINTS;
+
+-----CODE----------------------------------------- 
+select *,
+    CASE 
+        wHen Product_Name like '%loan%' or Product_Name like '%Loan%' then 'Loan type'--THIS U CAN AVOIUD 
+        when Product_Name in ('Bank account or service','Mortgage','Debt collection', 
+                              'Credit reporting','Money transfers') then 'service'
+        else 'other'
+        
+    end as Finance_type 
+    from AK_CONSUMER_COMPLAINTS;
+    
+    
+    ----- OPTIMIZED CODE
+    SELECT *,
+               CASE 
+	                WHEN LOWER(PRODUCT_NAME) LIKE '%loan' THEN 'Loan'
+	                WHEN UPPER(PRODUCT_NAME) IN('BANK ACCOUNT OR SERVICE','MORTGAGE','DEBT CLLECTION','CREDIT CARD','CREDIT REPORTING','MONEY TRANSFERS') THEN 'Service'
+	ELSE 'Other'
+END AS FINANCE_TYPE
+FROM AK_CONSUMER_COMPLAINTS;
+
+select  *,
+    case when product_name like '%loan' or product_name like '%Loan' then 'loan'
+         when product_name in ('Mortage','Bank account or service then','Credit reporting') then 'Service'
+    else 'Others'
+    end as finance_type
+  from AK_CONSUMER_COMPLAINTS;
